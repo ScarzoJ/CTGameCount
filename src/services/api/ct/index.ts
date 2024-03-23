@@ -9,7 +9,7 @@ const headers = {};
 
 
 const getProxy = (url: string) => {
-  return `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`
+  return `https://corsproxy.io/?${encodeURIComponent(url)}`
 }
 
 export const getSearchSummoner = async (gameName: string, tagline: string) => {

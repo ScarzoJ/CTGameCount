@@ -12,7 +12,6 @@ const PlayerSearchCard = () => {
   const [summonerInfo, setSummonerInfo] = useState<SummonerData>()
   const [summoner, setSummoner] = useState('')
   const [tagline, setTagline] = useState('')
-  const [totalGames, setTotalGames] = useState(0)
   const seasonGames = useMemo(() => [0], [])
   const seasons = [
     {
@@ -65,23 +64,23 @@ const PlayerSearchCard = () => {
     }, [])
     return (
       <Container>
-        <Typography>
+        <Typography variant="h5">
           {season.seasonName}
         </Typography>
         {showData && seasonData && !isEmpty(seasonData) ? (
           <>
-            <Typography>
+            <Typography variant="h6">
               SoloQs Played: {seasonData.play}
             </Typography>
-            <Typography>
+            <Typography variant="body1">
               Wins: {seasonData.win}
             </Typography>
-            <Typography>
+            <Typography variant="body1">
               Lose: {seasonData.lose}
             </Typography>
           </>
         ) : (
-          <Typography>
+          <Typography variant="h5">
             No Games
           </Typography>
         )
@@ -116,12 +115,9 @@ const PlayerSearchCard = () => {
           </Container>
           {hasSummonerInfo && (
             <Container>
-              <Typography>
+              <Typography variant="h5" >
                 Summoner: {summoner}#{tagline}
               </Typography>
-              {/*<Typography>
-                Total Games: {totalGames}
-              </Typography> */}
               {seasons.map((season, index) => {
                 return (
                   <Container>
