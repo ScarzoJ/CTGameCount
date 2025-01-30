@@ -1,15 +1,11 @@
 {
   "files": {
-    "main.css": "/CTGameCount/static/css/main.f855e6bc.css",
-    "main.js": "/CTGameCount/static/js/main.e28a41cc.js",
-    "static/js/453.5bd04571.chunk.js": "/CTGameCount/static/js/453.5bd04571.chunk.js",
+    "main.js": "/CTGameCount/static/js/main.f791ca2a.js",
     "index.html": "/CTGameCount/index.html",
-    "main.f855e6bc.css.map": "/CTGameCount/static/css/main.f855e6bc.css.map",
-    "main.e28a41cc.js.map": "/CTGameCount/static/js/main.e28a41cc.js.map",
-    "453.5bd04571.chunk.js.map": "/CTGameCount/static/js/453.5bd04571.chunk.js.map"
+    "static/media/github-mark.svg": "/CTGameCount/static/media/github-mark.6fa18895f6e6c7772cab7049f7e05f59.svg",
+    "main.f791ca2a.js.map": "/CTGameCount/static/js/main.f791ca2a.js.map"
   },
   "entrypoints": [
-    "static/css/main.f855e6bc.css",
-    "static/js/main.e28a41cc.js"
+    "static/js/main.f791ca2a.js"
   ]
 }
