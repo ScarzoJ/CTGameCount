@@ -8,12 +8,25 @@ import { SummonerData } from "../types/api/ct/searchSummoner";
 
 const PlayerSearchCard = () => {
 
-  const [hasSummonerInfo, setHasSummonerInfo] = useState(false)
-  const [summonerInfo, setSummonerInfo] = useState<SummonerData>()
+  const [summonerFound, setSummonerFound] = useState(false)
+  const [showData, setShowData] = useState(false)
+  const [lookupDone, setLookupDone] = useState(false)
   const [summoner, setSummoner] = useState('')
   const [tagline, setTagline] = useState('')
-  const seasonGames = useMemo(() => [0], [])
+  let [seasonGames, setSeasonGames] = useState<{ seasonData: SummonerByQueueData; seasonId: number; seasonName: string; }[]>([])
   const seasons = [
+    {
+      seasonId: 31,
+      seasonName: 'Season 2025 S1 S1',
+    },
+    {
+      seasonId: 29,
+      seasonName: 'Season 2024 S3',
+    },
+    {
+      seasonId: 27,
+      seasonName: 'Season 2024 S2',
+    },
     {
       seasonId: 25,
       seasonName: 'Season 2024 S1',
@@ -31,52 +44,91 @@ const PlayerSearchCard = () => {
       seasonName: 'Season 2022',
     }
   ]
-  const handleSearch = () => {
-    setHasSummonerInfo(false)
-    getSearchSummoner(summoner, tagline).then((data) => {
-      setSummonerInfo(data.data.find((summonerInfo) => {
-        return (summonerInfo.game_name.toLowerCase() === summoner.toLowerCase())
-          && (summonerInfo.tagline.toLowerCase() === tagline.toLowerCase());
-      }))
-    }).finally(() => {
-      setHasSummonerInfo(true)
-    })
+
+  interface SeasonsData {
+    seasonData: SummonerByQueueData;
+    seasonId: number;
+    seasonName: string;
   }
+
+  const seasonsData = seasons.map((season) => {
+    return { ...season, seasonData: {} as SummonerByQueueData };
+  }) as SeasonsData[]
+
+  const resetGames = () => {
+    seasonGames = []
+    setSeasonGames([] as { seasonData: SummonerByQueueData; seasonId: number; seasonName: string; }[])
+  }
+
+  const summonerLookup = () => {
+    resetGames()
+    setSummonerFound(false)
+    getSearchSummoner(summoner, tagline)
+      .then((data) => {
+        const summonerInfo = data.data.find((summonerInfo) => {
+          return (summonerInfo.game_name.toLowerCase() === summoner.toLowerCase())
+            && (summonerInfo.tagline.toLowerCase() === tagline.toLowerCase());
+        })
+        setLookupDone(true)
+
+        if (summonerInfo) {
+          const seasonsPromiseArray = seasons.map((season, index) => {
+            return new Promise<void>((resolve, reject) => {
+              getSummonerByQueue(summonerInfo!.summoner_id, 'SOLORANKED', season.seasonId)
+                .then((seasonData) => {
+                  const seasonEntry = { ...seasonsData[index], seasonData: seasonData.data }
+                  seasonGames.push(seasonEntry)
+                  setSeasonGames(seasonGames)
+                  return resolve()
+                }).catch(() => {
+                  return reject()
+                }).finally(() => {
+                })
+            })
+          })
+
+          Promise.all(seasonsPromiseArray)
+            .then(() => {
+              setSummonerFound(true)
+              setShowData(true)
+            })
+            .finally(() => {
+              const sortedGames = seasonGames.sort((a, b) => {
+                return a.seasonId - b.seasonId
+              })
+              setSeasonGames(sortedGames)
+            })
+
+        }
+      })
+  }
+
+
+
   interface SeasonInfoProps {
     season: {
+      seasonData: SummonerByQueueData;
       seasonId: number;
       seasonName: string;
     }
   }
 
-  const SeasonInfo = ({ season }: SeasonInfoProps) => {
-    const [seasonData, setSeasonData] = useState<SummonerByQueueData>()
-    const [showData, setShowData] = useState(false)
-    useEffect(() => {
-      setShowData(false)
-      getSummonerByQueue(summonerInfo!.summoner_id, 'SOLORANKED', season.seasonId).then((sData) => {
-        seasonGames.push(sData.data.play)
-        setSeasonData(sData.data)
-      }).finally(() => {
-        setShowData(true)
-      })
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+  const SeasonTooltip = ({ season }: SeasonInfoProps) => {
     return (
       <Container>
         <Typography variant="h5">
           {season.seasonName}
         </Typography>
-        {showData && seasonData && !isEmpty(seasonData) ? (
+        {!isEmpty(season.seasonData) ? (
           <>
             <Typography variant="h6">
-              SoloQs Played: {seasonData.play}
+              SoloQs Played: {season.seasonData.play}
             </Typography>
             <Typography variant="body1">
-              Wins: {seasonData.win}
+              Wins: {season.seasonData.win}
             </Typography>
             <Typography variant="body1">
-              Lose: {seasonData.lose}
+              Lose: {season.seasonData.lose}
             </Typography>
           </>
         ) : (
@@ -89,12 +141,9 @@ const PlayerSearchCard = () => {
     )
   }
 
-  useEffect(() => {
-    setHasSummonerInfo(false)
-    setSummoner('')
-    setTagline('')
-    setSummonerInfo(undefined)
-  }, [])
+  const handleSearch = () => {
+    summonerLookup()
+  }
 
   return (
     <Box>
@@ -103,25 +152,42 @@ const PlayerSearchCard = () => {
           <Container>
             <TextField label="Summoner" variant="filled" onChange={(e) => {
               setSummoner(e.target.value)
-              setHasSummonerInfo(false)
+              setSummonerFound(false)
+              setLookupDone(false)
             }}
             />
             <TextField label="Tag" variant="filled" onChange={(e) => {
               setTagline(e.target.value)
-              setHasSummonerInfo(false)
+              setSummonerFound(false)
+              setLookupDone(false)
             }}
             />
             <Button onClick={() => handleSearch()}>Search</Button>
+            {lookupDone && (summonerFound ? (
+              <Typography>
+                Summoner Name Encontrado
+              </Typography>
+            ) : (
+              <Typography>
+                Summoner Name No Encontrado
+              </Typography>
+            ))
+            }
           </Container>
-          {hasSummonerInfo && (
+          {summonerFound && showData && (
             <Container>
               <Typography variant="h5" >
                 Summoner: {summoner}#{tagline}
               </Typography>
-              {seasons.map((season, index) => {
+              <Typography variant="h5" >
+                Total Games: {seasonGames.reduce((accumulator, season) => {
+                  return accumulator + (season.seasonData.play || 0)
+                }, 0)}
+              </Typography>
+              {seasonGames.map((season, index) => {
                 return (
                   <Container>
-                    <SeasonInfo key={index} season={season} />
+                    <SeasonTooltip key={index} season={season} />
                   </Container>
                 )
               })}
