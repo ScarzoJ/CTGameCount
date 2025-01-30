@@ -8,7 +8,7 @@ const BasePage = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            CT Game Count
+            Contador de partidas para el CT
           </Typography>
           <img
             src={GHLogo}

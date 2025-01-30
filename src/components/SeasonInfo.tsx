@@ -19,18 +19,18 @@ export const SeasonInfo = ({ season }: SeasonInfoProps) => {
       {!isEmpty(season.seasonData) ? (
         <>
           <Typography variant="h6">
-            SoloQs Played: {season.seasonData.play}
+            SoloQs Jugadas: {season.seasonData.play}
           </Typography>
           <Typography variant="body1">
-            Wins: {season.seasonData.win}
+            Victorias: {season.seasonData.win}
           </Typography>
           <Typography variant="body1">
-            Lose: {season.seasonData.lose}
+            Derrotas: {season.seasonData.lose}
           </Typography>
         </>
       ) : (
         <Typography variant="h5">
-          No Games
+          Sin partidas registradas
         </Typography>
       )
       }

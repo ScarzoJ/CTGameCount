@@ -80,13 +80,13 @@ const PlayerSearchCard = () => {
       <Card>
         <CardContent>
           <Container>
-            <TextField label="Summoner" variant="filled" onChange={(e) => {
+            <TextField label="Nombre" variant="filled" onChange={(e) => {
               setSummoner(e.target.value)
               setSummonerFound(false)
               setLookupDone(false)
             }}
             />
-            <TextField label="Tag" variant="filled" onChange={(e) => {
+            <TextField label="#" variant="filled" onChange={(e) => {
               setTagline(e.target.value)
               setSummonerFound(false)
               setLookupDone(false)
@@ -95,11 +95,11 @@ const PlayerSearchCard = () => {
             <Button onClick={() => summonerLookup()}>Search</Button>
             {lookupDone && (summonerFound ? (
               <Typography>
-                Summoner Name Encontrado
+                Nombre de Invocador Encontrado
               </Typography>
             ) : (
               <Typography>
-                Summoner Name No Encontrado
+                Nombre de Invocador No Encontrado
               </Typography>
             ))
             }
@@ -107,10 +107,10 @@ const PlayerSearchCard = () => {
           {summonerFound && showData && (
             <Container>
               <Typography variant="h5" >
-                Summoner: {summoner}#{tagline}
+                Nombre de Invocador: {summoner}#{tagline}
               </Typography>
               <Typography variant="h5" >
-                Total Games: {seasonGames.reduce((accumulator, season) => {
+                Partidas totales: {seasonGames.reduce((accumulator, season) => {
                   return accumulator + (season.seasonData.play || 0)
                 }, 0)}
               </Typography>
