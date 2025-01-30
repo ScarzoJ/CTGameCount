@@ -1,49 +1,21 @@
 import { Box, Button, Card, CardContent, Container, TextField, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import { isEmpty } from "lodash";
+import { useState } from "react";
 
 import { getSearchSummoner, getSummonerByQueue } from "../services/api/ct";
 import { SummonerByQueueData } from "../types/api/ct/searchSummonerByQueue";
-import { SummonerData } from "../types/api/ct/searchSummoner";
+import { SeasonInfo } from "./SeasonInfo";
+
+import OPGGSeasons from "../utils/opggSeasonMapping.json"
 
 const PlayerSearchCard = () => {
-
   const [summonerFound, setSummonerFound] = useState(false)
   const [showData, setShowData] = useState(false)
   const [lookupDone, setLookupDone] = useState(false)
   const [summoner, setSummoner] = useState('')
   const [tagline, setTagline] = useState('')
   let [seasonGames, setSeasonGames] = useState<{ seasonData: SummonerByQueueData; seasonId: number; seasonName: string; }[]>([])
-  const seasons = [
-    {
-      seasonId: 31,
-      seasonName: 'Season 2025 S1 S1',
-    },
-    {
-      seasonId: 29,
-      seasonName: 'Season 2024 S3',
-    },
-    {
-      seasonId: 27,
-      seasonName: 'Season 2024 S2',
-    },
-    {
-      seasonId: 25,
-      seasonName: 'Season 2024 S1',
-    },
-    {
-      seasonId: 23,
-      seasonName: 'Season 2023 S2',
-    },
-    {
-      seasonId: 21,
-      seasonName: 'Season 2023 S1',
-    },
-    {
-      seasonId: 19,
-      seasonName: 'Season 2022',
-    }
-  ]
+
+  const seasons = OPGGSeasons
 
   interface SeasonsData {
     seasonData: SummonerByQueueData;
@@ -103,48 +75,6 @@ const PlayerSearchCard = () => {
       })
   }
 
-
-
-  interface SeasonInfoProps {
-    season: {
-      seasonData: SummonerByQueueData;
-      seasonId: number;
-      seasonName: string;
-    }
-  }
-
-  const SeasonTooltip = ({ season }: SeasonInfoProps) => {
-    return (
-      <Container>
-        <Typography variant="h5">
-          {season.seasonName}
-        </Typography>
-        {!isEmpty(season.seasonData) ? (
-          <>
-            <Typography variant="h6">
-              SoloQs Played: {season.seasonData.play}
-            </Typography>
-            <Typography variant="body1">
-              Wins: {season.seasonData.win}
-            </Typography>
-            <Typography variant="body1">
-              Lose: {season.seasonData.lose}
-            </Typography>
-          </>
-        ) : (
-          <Typography variant="h5">
-            No Games
-          </Typography>
-        )
-        }
-      </Container>
-    )
-  }
-
-  const handleSearch = () => {
-    summonerLookup()
-  }
-
   return (
     <Box>
       <Card>
@@ -162,7 +92,7 @@ const PlayerSearchCard = () => {
               setLookupDone(false)
             }}
             />
-            <Button onClick={() => handleSearch()}>Search</Button>
+            <Button onClick={() => summonerLookup()}>Search</Button>
             {lookupDone && (summonerFound ? (
               <Typography>
                 Summoner Name Encontrado
@@ -187,7 +117,7 @@ const PlayerSearchCard = () => {
               {seasonGames.map((season, index) => {
                 return (
                   <Container>
-                    <SeasonTooltip key={index} season={season} />
+                    <SeasonInfo key={index} season={season} />
                   </Container>
                 )
               })}
