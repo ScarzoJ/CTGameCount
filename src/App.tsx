@@ -1,4 +1,4 @@
-import BasePage from './components/BasePage';
+import BasePage from "./components/BasePage";
 
 const App = () => {
   return (
@@ -6,6 +6,6 @@ const App = () => {
       <BasePage />
     </>
   );
-}
+};
 
 export default App;

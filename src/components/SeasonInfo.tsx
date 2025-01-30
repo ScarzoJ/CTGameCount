@@ -7,15 +7,13 @@ interface SeasonInfoProps {
     seasonData: SummonerByQueueData;
     seasonId: number;
     seasonName: string;
-  }
+  };
 }
 
 export const SeasonInfo = ({ season }: SeasonInfoProps) => {
   return (
     <Container>
-      <Typography variant="h5">
-        {season.seasonName}
-      </Typography>
+      <Typography variant="h5">{season.seasonName}</Typography>
       {!isEmpty(season.seasonData) ? (
         <>
           <Typography variant="h6">
@@ -29,11 +27,8 @@ export const SeasonInfo = ({ season }: SeasonInfoProps) => {
           </Typography>
         </>
       ) : (
-        <Typography variant="h5">
-          Sin partidas registradas
-        </Typography>
-      )
-      }
+        <Typography variant="h5">Sin partidas registradas</Typography>
+      )}
     </Container>
-  )
-}
+  );
+};

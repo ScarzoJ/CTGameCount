@@ -1,6 +1,14 @@
-import { AppBar, Box, Button, Grid, IconButton, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import PlayerSearchCard from "./PlayerSearchCard";
-import GHLogo from "../assets/github-mark.svg"
+import GHLogo from "../assets/github-mark.svg";
 
 const BasePage = () => {
   return (
@@ -15,8 +23,13 @@ const BasePage = () => {
             alt="Github"
             height={"24px"}
             width={"24px"}
-            onClick={() => window.open("https://github.com/ScarzoJ/CTGameCount/tree/gh-pages", "Github")}
-            style={{cursor:"pointer"}}
+            onClick={() =>
+              window.open(
+                "https://github.com/ScarzoJ/CTGameCount/tree/gh-pages",
+                "Github",
+              )
+            }
+            style={{ cursor: "pointer" }}
           />
         </Toolbar>
       </AppBar>
@@ -32,6 +45,6 @@ const BasePage = () => {
       </Box>
     </>
   );
-}
+};
 
-export default BasePage
+export default BasePage;
